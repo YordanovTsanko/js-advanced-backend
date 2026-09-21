@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # backend/
 
 Пълна структура: `models` + `controllers` + `routes` + `middleware` + `utils`, свързани в едно Express приложение.
@@ -85,3 +86,6 @@ npm run dev
 - `Session`, `PasswordReset` и `RefreshToken` използват TTL индекс (`expiresAt`), така че MongoDB сама трие изтеклите записи.
 - `authLimiter` ограничава login/register/forgot-password до 10 опита на 15 минути на IP, за защита срещу brute-force.
 - Всички admin действия върху потребители се записват в `AuditLog`.
+=======
+# js-advanced-backend
+>>>>>>> 0ad6371427665bd3e9c2bedbf8e0c34a9bd09249
