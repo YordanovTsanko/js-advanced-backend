@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # backend/
 
 Пълна структура: `models` + `controllers` + `routes` + `middleware` + `utils`, свързани в едно Express приложение.
@@ -54,21 +53,67 @@ backend/
 
 ## Основни endpoint-и
 
-| Метод | Път | Защита | Описание |
-|---|---|---|---|
-| POST | `/api/v1/auth/register` | публичен | Регистрация + изпращане на verification имейл |
-| POST | `/api/v1/auth/login` | публичен | Вход, връща access + refresh token |
-| POST | `/api/v1/auth/refresh` | публичен (изисква refresh token) | Ротация на токени |
-| POST | `/api/v1/auth/logout` | публичен | Отменя refresh token / сесия |
-| GET | `/api/v1/auth/verify-email/:token` | публичен | Потвърждава имейл |
-| POST | `/api/v1/auth/forgot-password` | публичен | Изпраща линк за нулиране |
-| POST | `/api/v1/auth/reset-password/:token` | публичен | Задава нова парола |
-| POST | `/api/v1/auth/change-password` | вход | Смяна на парола от логнат потребител |
-| GET/PATCH/DELETE | `/api/v1/users/me` | вход | Профил на текущия потребител |
-| GET/PATCH/DELETE | `/api/v1/users/:id` | admin | Управление на потребители |
-| GET/DELETE | `/api/v1/sessions` | вход | Активни сесии + прекратяване |
-| GET/PATCH/DELETE | `/api/v1/notifications` | вход | Известия |
-| GET | `/api/v1/audit-logs` | admin | Одит лог |
+Метод    Път    Защита    Body / Query
+POST    /auth/register    публичен    { email, password, firstName, lastName }
+POST    /auth/login    публичен    { email, password }
+POST    /auth/refresh    публичен    { refreshToken }
+POST    /auth/logout    публичен    { refreshToken } (опц.)
+GET    /auth/verify-email/:token    публичен    —
+POST    /auth/forgot-password    публичен    { email }
+POST    /auth/reset-password/:token    публичен    { password }
+POST    /auth/change-password    🔒 вход    { currentPassword, newPassword }
+
+Users (/users)
+Метод    Път    Защита    Body / Query
+GET    /users/me    🔒 вход    —
+PATCH    /users/me    🔒 вход    { firstName, lastName, username, phone, avatar, bio, preferences, address }
+DELETE    /users/me    🔒 вход    —
+GET    /users    🔑 admin    query: role, status, page, limit
+GET    /users/:id    🔑 admin    —
+PATCH    /users/:id    🔑 admin    { role, status, firstName, lastName, phone }
+DELETE    /users/:id    🔑 admin    —
+
+Sessions (/sessions)
+Метод    Път    Защита    Body / Query
+GET    /sessions    🔒 вход    —
+DELETE    /sessions/all    🔒 вход    —
+DELETE    /sessions/:id    🔒 вход    —
+
+Notifications (/notifications)
+Метод    Път    Защита    Body / Query
+GET    /notifications    🔒 вход    query: read, page, limit
+PATCH    /notifications/read-all    🔒 вход    —
+PATCH    /notifications/:id/read    🔒 вход    —
+DELETE    /notifications/:id    🔒 вход    —
+
+Products (/products)
+Метод    Път    Защита    Body / Query
+GET    /products    публичен    query: page, limit, quantityType, minPrice, maxPrice, isActive, sort, order, search
+GET    /products/:id    публичен    —
+POST    /products    🔑 admin    { name, description, type, features, quantityType, quantity, price }
+PATCH    /products/:id    🔑 admin    { name, description, type, features, quantityType, quantity, price, isActive }
+DELETE    /products/:id    🔑 admin    —
+PATCH    /products/:id/restore    🔑 admin    —
+
+Favorites (/favorites)
+Метод    Път    Защита    Body / Query
+GET    /favorites    🔒 вход    —
+GET    /favorites/:productId    🔒 вход    —
+POST    /favorites/:productId    🔒 вход    —
+DELETE    /favorites/:productId    🔒 вход    —
+
+Cart (/cart)
+Метод    Път    Защита    Body / Query
+GET    /cart    🔒 вход    —
+POST    /cart/items    🔒 вход    { productId, quantity }
+PATCH    /cart/items/:productId    🔒 вход    { quantity }
+DELETE    /cart/items/:productId    🔒 вход    —
+DELETE    /cart    🔒 вход    —
+
+Audit Logs (/audit-logs)
+Метод    Път    Защита    Body / Query
+GET    /audit-logs    🔑 admin    query: entityType, entityId, actor, action, page, limit
+
 
 ## Инсталация
 
@@ -86,6 +131,3 @@ npm run dev
 - `Session`, `PasswordReset` и `RefreshToken` използват TTL индекс (`expiresAt`), така че MongoDB сама трие изтеклите записи.
 - `authLimiter` ограничава login/register/forgot-password до 10 опита на 15 минути на IP, за защита срещу brute-force.
 - Всички admin действия върху потребители се записват в `AuditLog`.
-=======
-# js-advanced-backend
->>>>>>> 0ad6371427665bd3e9c2bedbf8e0c34a9bd09249
